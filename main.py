@@ -16,7 +16,7 @@ from mediapipe.framework.formats import landmark_pb2
 definitions = {'sc': 'single crochet', 'dc': 'double crochet', 'ch': 'chain', 'sl st': 'slip stitch'}
 tutorials = {'sc': 'SingleCrochet.gif', 'dc': 'DoubleCrochet.gif', 'chain': 'Chain.gif'}
 
-voice_instructions = "\n\nVoice Commands:\n\"next\": move to the next row in your project\n\"back\": move to the previous row in your project\n\"define <term>\": the coach will read the common definition of a crochet abbreviation\n\tavailable for ch, sc, dc\n\"learn <term>\": the coach will play a GIF tutorial of the requested stitch\n\tavailable for ch, sc, dc\n\"exit\": leave the tutorial and return to webcam\n"
+voice_instructions = "\nVoice Commands:\n\"next\": move to the next row in your project\n\"back\": move to the previous row in your project\n\"define <term>\": the coach will read the common definition of a crochet abbreviation\n\tavailable for ch, sc, dc\n\"learn <term>\": the coach will play a GIF tutorial of the requested stitch\n\tavailable for ch, sc, dc\n\"exit\": leave the tutorial and return to webcam\n"
 
 class landmarker_and_result():
    def __init__(self):
@@ -93,13 +93,13 @@ def main():
     pattern_rows = []
 
     # define the window layout
-    pattern_layout = [[sg.Text('Row 1:', font='Helvetica 14'), sg.Input(key='r1', font='Helvetica 14')],
-                      [sg.Text('# of ch:'), sg.Input(key='ch1', size=(5, 1)), sg.Text('# of sc:'), sg.Input(key='sc1', size=(5, 1)), sg.Text('# of dc:'), sg.Input(key='dc1', size=(5, 1))],
-                      [sg.Text('Row 2:', font='Helvetica 14'), sg.Input(key='r2', font='Helvetica 14')],
-                      [sg.Text('# of ch:'), sg.Input(key='ch2', size=(5, 1)), sg.Text('# of sc:'), sg.Input(key='sc2', size=(5, 1)), sg.Text('# of dc:'), sg.Input(key='dc2', size=(5, 1))],
-                      [sg.Text('Row 3:', font='Helvetica 14'), sg.Input(key='r3', font='Helvetica 14')],
-                      [sg.Text('# of ch:'), sg.Input(key='ch3', size=(5, 1)), sg.Text('# of sc:'), sg.Input(key='sc3', size=(5, 1)), sg.Text('# of dc:'), sg.Input(key='dc3', size=(5, 1))],
-                      [sg.Button('Start', size=(10, 1), font='Helvetica 14')]]
+    pattern_layout = [[sg.Text('Row 1:', font='Helvetica 24'), sg.Input(key='r1', font='Helvetica 24')],
+                      [sg.Text('# of ch:', font='Helvetica 20'), sg.Input(key='ch1', size=(5, 1), font='Helvetica 20'), sg.Text('# of sc:', font='Helvetica 20'), sg.Input(key='sc1', size=(5, 1), font='Helvetica 20'), sg.Text('# of dc:', font='Helvetica 20'), sg.Input(key='dc1', size=(5, 1), font='Helvetica 20')],
+                      [sg.Text('Row 2:', font='Helvetica 24'), sg.Input(key='r2', font='Helvetica 24')],
+                      [sg.Text('# of ch:', font='Helvetica 20'), sg.Input(key='ch2', size=(5, 1), font='Helvetica 20'), sg.Text('# of sc:', font='Helvetica 20'), sg.Input(key='sc2', size=(5, 1), font='Helvetica 20'), sg.Text('# of dc:', font='Helvetica 20'), sg.Input(key='dc2', size=(5, 1), font='Helvetica 20')],
+                      [sg.Text('Row 3:', font='Helvetica 24'), sg.Input(key='r3', font='Helvetica 24')],
+                      [sg.Text('# of ch:', font='Helvetica 20'), sg.Input(key='ch3', size=(5, 1), font='Helvetica 20'), sg.Text('# of sc:', font='Helvetica 20'), sg.Input(key='sc3', size=(5, 1), font='Helvetica 20'), sg.Text('# of dc:', font='Helvetica 20'), sg.Input(key='dc3', size=(5, 1), font='Helvetica 20')],
+                      [sg.Button('Start', size=(10, 1), font='Helvetica 24')]]
     left_column_layout = [[sg.Text("Pattern", size=(20, 15), font='Helvetica 24', key='pattern-text')], 
                           [sg.Text(voice_instructions, size=(35, 15), font='Helvetica 20', key='instructions')]]
     crochet_layout = [[sg.Text("Not started", size=(80, 1), justification='center', font='Helvetica 30', key='row-text')],
