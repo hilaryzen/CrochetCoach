@@ -14,7 +14,7 @@ import mediapipe as mp
 from mediapipe.framework.formats import landmark_pb2
 
 definitions = {'sc': 'single crochet', 'dc': 'double crochet', 'ch': 'chain', 'sl st': 'slip stitch'}
-tutorials = {'sc': 'SingleCrochet.gif', 'dc': 'DoubleCrochet.gif', 'chain': 'Chain.gif'}
+tutorials = {'sc': 'SingleCrochet.gif', 'single crochet': 'SingleCrochet.gif', 'dc': 'DoubleCrochet.gif', 'double crochet': 'DoubleCrochet.gif', 'ch': 'Chain.gif', 'chain': 'Chain.gif'}
 
 voice_instructions = "\nVoice Commands:\n\"next\": move to the next row in your project\n\"back\": move to the previous row in your project\n\"define <term>\": the coach will read the common definition of a crochet abbreviation\n\tavailable for ch, sc, dc\n\"learn <term>\": the coach will play a GIF tutorial of the requested stitch\n\tavailable for ch, sc, dc\n\"exit\": leave the tutorial and return to webcam\n"
 
@@ -166,7 +166,7 @@ def main():
             # instead of `r.recognize_google(audio)`
             value = recognizer.recognize_google(audio)
             print("Google Speech Recognition thinks you said " + value)
-            user_command = value.lower().split(' ')
+            user_command = value.lower().split(' ', 1)
             if user_command[0] == 'define':
                 if user_command[1] in definitions.keys():
                     read(definitions[user_command[1]])
@@ -214,12 +214,9 @@ def main():
                 return False
             else:
                 hand_landmarks_list = detection_result.hand_landmarks
-                thumb_tip = hand_landmarks_list[0][20]
-                # print((thumb_tip))
-                index_tip = hand_landmarks_list[0][0]
-                # print((index_tip))
-                # print(index_tip.y)
-                if index_tip.y - thumb_tip.y > 0.2:
+                pinky_tip = hand_landmarks_list[0][20]
+                index_tip = hand_landmarks_list[0][8]
+                if pinky_tip.y > index_tip.y:
                     if not twisting:
                         total_twists += 1
                         twisting = True
@@ -234,6 +231,10 @@ def main():
 
     while True:
         event, values = window.read(timeout=100)
+        if event == sg.WIN_CLOSED:
+            stop_listening(wait_for_stop=False)
+            return
+        
         if on_pattern_entry:
             if event == 'Start':
                 on_pattern_entry = False
@@ -245,24 +246,14 @@ def main():
                 window['crochet-ui'].update(visible=True)
                 window['pattern-text'].update(format_pattern(pattern_rows))
                 window['row-text'].update(format_row(row_position, pattern_rows[row_position - 1]))
-                # left_column_layout = [[sg.Text(format_pattern(pattern_rows), size=(30,40), key='pattern-text')], 
-                #                       [sg.Button('Forward', size=(10, 1), font='Helvetica 14'), sg.Button('Go Back', size=(10, 1), font='Helvetica 14')],
-                #                       [sg.Input(key='command'), sg.Button('Go', size=(5, 1), font='Helvetica 14')]]
-                # layout = [[sg.Text(format_row(row_position, pattern_rows[row_position - 1]), size=(80, 1), justification='center', font='Helvetica 30', key='row-text')],
-                #           [ColumnFixedSize(left_column_layout, size=(100,100)), 
-                #            sg.Image(filename='', key='image')]]
-                # window = sg.Window('Crochet Coach',
-                #        layout)
                 recording = True
                 event, values = window.read(timeout=100)
-                # window out of position while first instruction is read
                 read(format_row(row_position, pattern_rows[row_position - 1]))
         
-        if not on_pattern_entry:
-            if event == 'Exit' or event == sg.WIN_CLOSED:
-                stop_listening(wait_for_stop=False)
-                print("stopped listening")
-                return
+        # if not on_pattern_entry:
+        #     if event == 'Exit' or event == sg.WIN_CLOSED:
+        #         stop_listening(wait_for_stop=False)
+        #         return
 
         if running_tutorial:
             # sg.PopupAnimated(tutorials[user_command[1]], no_titlebar=False, time_between_frames=100)
